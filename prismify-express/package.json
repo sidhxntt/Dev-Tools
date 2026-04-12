@@ -1,0 +1,24 @@
+{
+  "name": "@sidhxntt/prismify-express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  
+  "bin": {
+    "@sidhxntt/prismify-express": "./src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^14.0.3",
+    "fs-extra": "^11.3.4",
+    "ora": "^5.4.1"
+  }
+}

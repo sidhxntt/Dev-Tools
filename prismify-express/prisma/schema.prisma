@@ -1,0 +1,67 @@
+generator client {
+  provider = "go run github.com/steebchen/prisma-client-go"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String
+  email     String   @unique
+  age       Int
+
+  posts     Post[]
+  comments  Comment[]
+  profile   Profile?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  title     String
+  content   String?
+
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  comments  Comment[]
+  categories Category[] @relation("PostCategories")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+model Profile {
+  id        Int    @id @default(autoincrement())
+  bio       String?
+  avatarUrl String?
+
+  userId    Int    @unique
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+
+  posts Post[] @relation("PostCategories")
+}
