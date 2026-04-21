@@ -26,6 +26,16 @@ A collection of developer productivity tools including an AI-powered README gene
 - **Enum Support** - Handles Prisma enum types automatically
 - **Complete Setup** - Generates package.json, .env templates, and .gitignore
 
+### SEO Meta CLI
+- **Zero Dependencies** - Pure Node.js 18+, no npm installs required
+- **Interactive Prompts** - Step-by-step stdin prompts with defaults and hints
+- **Complete Coverage** - Injects primary meta, favicons, Open Graph, Twitter/X Card, PWA, Geo, JSON-LD, and performance hints
+- **Smart Injection** - Detects and replaces `<head>` content intelligently with graceful fallbacks
+- **Article Schema Support** - Optional `article:*` Open Graph tags for blog/news pages
+- **Person JSON-LD** - Generates Person + WebSite schema for Google Knowledge Panel
+- **Config Persistence** - Saves answers to a `.seo-config.json` for version control and reuse
+- **Flag Support** - `--input` / `--output` flags to skip file path prompts in scripts
+
 ## Prerequisites
 
 - Node.js 14.0.0 or higher
@@ -42,6 +52,9 @@ npm install -g @sidhxntt/readme-wizard
 
 # Install Prismify Express
 npm install -g @sidhxntt/prismify-express
+
+# Install SEO Meta CLI
+npm install -g @sidhxntt/seo-meta
 ```
 
 ### Local Installation
@@ -50,6 +63,7 @@ npm install -g @sidhxntt/prismify-express
 # Use with npx (no installation required)
 npx @sidhxntt/readme-wizard generate
 npx @sidhxntt/prismify-express generate schema.prisma
+npx @sidhxntt/seo-meta
 ```
 
 ## Configuration
@@ -113,6 +127,23 @@ prismify-express generate prisma/schema.prisma --no-package
 prismify-express generate prisma/schema.prisma --dry-run
 ```
 
+### SEO Meta CLI
+
+#### Interactive mode (prompts for everything)
+```bash
+seo-meta
+```
+
+#### Skip file path prompts with flags
+```bash
+seo-meta --input ./index.html --output ./dist/index.html
+```
+
+#### Run without installing
+```bash
+node seo-meta.js --input ./index.html
+```
+
 ## CLI Reference
 
 ### README Wizard Commands
@@ -148,6 +179,29 @@ Generate Express API from Prisma schema.
 - `-o, --output <dir>` - Output directory (default: `./generated-api`)
 - `--no-package` - Skip generating package.json
 - `--dry-run` - Preview output without writing files
+
+### SEO Meta CLI Commands
+
+#### `seo-meta [options]`
+Interactively populate all SEO meta tags into an HTML file.
+
+**Options:**
+- `--input <file>` - Input HTML file path
+- `--output <file>` - Output HTML file path (defaults to input path)
+
+**Prompted sections (in order):**
+
+| Section | Tags / Data |
+|---|---|
+| Primary Meta | `<title>`, description, keywords, author, canonical, robots, hreflang |
+| Favicons | 16px, 32px, 180px (Apple), 192px, 512px, `.ico` |
+| Open Graph | `og:*` tags + optional `article:*` tags |
+| Twitter / X Card | `twitter:*` tags, all card types |
+| Theme / PWA | theme-color, color-scheme, `apple-mobile-web-app-*` |
+| Geo | geo.region, geo.placename |
+| Performance | preconnect, dns-prefetch links |
+| JSON-LD | Person + WebSite schema |
+| Extra Scripts | Arbitrary `<script src>` with optional `defer` |
 
 ## Generated API Structure (Prismify Express)
 
@@ -217,13 +271,17 @@ dev_tools/
 │   │   └── parser.js          # Prisma schema parsing
 │   ├── package.json           # Package configuration
 │   └── README.md              # Tool-specific documentation
-└── readme_wizard/
-    ├── src/
-    │   ├── generator.js       # Claude AI integration
-    │   ├── index.js          # CLI entry point
-    │   └── scanner.js        # Codebase scanning logic
-    ├── package.json          # Package configuration
-    └── README.md             # Tool-specific documentation
+├── readme_wizard/
+│   ├── src/
+│   │   ├── generator.js       # Claude AI integration
+│   │   ├── index.js          # CLI entry point
+│   │   └── scanner.js        # Codebase scanning logic
+│   ├── package.json          # Package configuration
+│   └── README.md             # Tool-specific documentation
+└── seo_meta_cli/
+    ├── seo-meta.js        # CLI entry point + injector
+    ├── package.json           # Package configuration
+    └── README.md              # Tool-specific documentation
 ```
 
 ### Key Files
@@ -234,6 +292,7 @@ dev_tools/
 - **`prismify-express/src/parser.js`** - Parses Prisma schema files and extracts models/enums
 - **`prismify-express/src/generator.js`** - Generates Express route files and project structure
 - **`prismify-express/src/index.js`** - CLI interface and main orchestration logic
+- **`seo_meta_cli/seo-meta.js`** - Interactive prompts, meta block builder, and HTML injector
 - **`docs/index.html`** - Project documentation and landing page
 
 ## Contributing
